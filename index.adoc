@@ -1,5 +1,6 @@
 = Processamento Digital de Imagens
-Gabriel Souto Lozano Barbosa -pdi
+Gabriel Souto Lozano Barbosa 
+LOREM IPSUM
 :toc: left
 
 == 1. Manipulando pixels em uma imagem.
