@@ -25,7 +25,7 @@ efeitos artísticos ou estilísticos.
 
 ==== 1.1.1. Código & Resultado. 
 
-[source,cpp, numbered, linenums]
+[source,cpp]
 .regios.cpp 
 ----
 #include <iostream>
