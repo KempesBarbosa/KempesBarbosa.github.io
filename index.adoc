@@ -1,6 +1,5 @@
 = Processamento Digital de Imagens
 Gabriel Souto Lozano Barbosa 
-LOREM IPSUM
 :toc: left
 
 == 1. Manipulando pixels em uma imagem.
@@ -25,134 +24,67 @@ efeitos artísticos ou estilísticos.
 
 ==== 1.1.1. Código & Resultado. 
 
-[source,cpp]
-.regios.cpp 
-----
-#include <iostream>
-#include <opencv2/opencv.hpp>
 
-using namespace cv;
-using namespace std;
+=== 1.2 Troca de regiões 
 
-int main() {
-	cout << "INICIANDO..." << endl;
+==== 1.2.1 Código & Resultado.
 
-	Mat image;
-	int P1X, P1Y, P2X, P2Y;
-	char diretorio[1000];
+== 2. Serialização via FileStore
 
-	cout << "Digite a loc da imagem: " << endl;
-	cout << "EX.: C:\\User\\Desktop\\<nomedaimagem>.png" << endl;
-	cin >> diretorio;
+=== 2.1. filestore.cpp
 
-	auto imageO = imread(diretorio);
-	image = imread(diretorio, IMREAD_GRAYSCALE);
+==== 2.1.1 Código & Resultado.
 
-	int rows = image.rows;
-	int cols = image.cols;
+== 3. Decomposição de imagens em planos de bits
 
-	cout << "Digite o ponto P1 da imagem" << endl;
-	cout << "Entre Linha 0 e" << " " << (rows - 1) << " " << "e Coluna 0 e" << " " << (cols - 1) << endl;
-	cin >> P1X >> P1Y;
-	cout << "(" << P1X << "," << P1Y << ")" << endl;
-	cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
+=== 3.1 Esteganografia em imagens digitais
 
-	int confirmaP1;
+==== 3.1.1 Código & Resultado.
 
-	do {
-		cin >> confirmaP1;
-		if (confirmaP1 == 0) {
-			cout << "Digite o ponto P1 da imagem" << endl;
-			cout << "Entre Linha 0 e" << " " << (rows - 1) << " " << "e Coluna 0 e" << " " << (cols - 1) << endl;
-			cin >> P1X >> P1Y;
-			cout << "(" << P1X << "," << P1Y << ")" << endl;
+== 4. Preenchendo regiões
 
-			cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
-			cin >> confirmaP1;
-		}
+=== 4.1 FloodFill
 
-		if (confirmaP1 == 1 && (P1X < 0 || P1X > rows)) {
-			cout << "Valor de X do ponto P1 localiza-se fora da imagem, digite novamente P1X: " << endl;
-			cin >> P1X;
+==== 4.1.1 Código & Resultado.
 
-			cout << "(" << P1X << "," << P1Y << ")" << endl;
-			cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
-			cin >> confirmaP1;
-		}
+== 5. Manipulação de histogramas
 
-		if (confirmaP1 == 1 && (P1Y< 0 || P1Y > cols)) {
-			cout << "Valor de Y do ponto P1 localiza-se fora da imagem, digite novamente P1Y: " << endl;
-			cin >> P1Y;
+=== 5.1 Histograma
 
-			cout << "(" << P1X << "," << P1Y << ")" << endl;
-			cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
-			cin >> confirmaP1;
-		}
-	} while (confirmaP1 == 0);
+==== 5.1.1 Código & Resultado
 
-	cout << "Digite o ponto P2 da imagem" << endl;
-	cout << "Entre Linha 0 e" << " " << (rows - 1) << " " << "e Coluna 0 e" << " " << (cols - 1) << endl;
-	cin >> P2X >> P2Y;
-	cout << "(" << P2X << "," << P2Y << ")" << endl;
-	cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
+== 6. Filtragem no domínio espacial I
 
-	int confirmaP2;
-	do {
-		cin >> confirmaP2;
-		if (confirmaP2 == 0) {
-			cout << "Digite o ponto P2 da imagem" << endl;
-			cout << "Entre Linha 0 e" << " " << (rows - 1) << " " << "e Coluna 0 e" << " " << (cols - 1) << endl;
-			cin >> P2X >> P2Y;
-			cout << "(" << P2X << "," << P2Y << ")" << endl;
+=== 6.1 Filtro Espacial 
 
-			cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
-			cin >> confirmaP2;
-		}
+==== 6.1.1 Código & Resultado
 
-		if (confirmaP2 == 1 && (P2X < 0 || P2X > rows || P2X < P1X)) {
-			cout << "Valor de X do ponto P2 localiza-se fora da imagem ou eh menor que P1X, digite novamente P2X: " << endl;
-			cin >> P2X;
+== 7. Filtragem no domínio espacial II
 
-			cout << "(" << P2X << "," << P2Y << ")" << endl;
-			cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
-			cin >> confirmaP2;
-		}
+=== 7.1 TiltShift 
 
-		if (confirmaP2 == 1 && (P2Y< 0 || P2Y > cols || P2Y < P1Y)) {
-			cout << "Valor de Y do ponto P2 localiza-se fora da imagem ou eh menor que P1Y, digite novamente P2Y: " << endl;
-			cin >> P2Y;
+==== 7.1.1 Código & Resultado
 
-			cout << "(" << P2X << "," << P2Y << ")" << endl;
-			cout << "Digite 0 para cancelar e 1 para confirmar" << endl;
-			cin >> confirmaP2;
-		}
-	} while (confirmaP2 == 0);
+== 8. A Tranformada Discreta de Fourier
 
-	if (!image.data) {
-		cout << "Imagem nao encontrada!" << endl;
-	}
+=== 8.1 
 
-	for (int i = P1X; i < P2X; i++) {
-		for (int j = P1Y; j < P2Y; j++) {
+==== 8.1.1 Código & Resultado
 
-			image.at<uchar>(i, j) = 255 - image.at<uchar>(i, j);
+== 9. Filtragem no Domínio da Frequência
 
-		}
-	}
+=== 9.1 Filtro Homomórfico
 
-	imwrite("janelaNegativo.png", image);
-	namedWindow("janelaOriginal", WINDOW_AUTOSIZE);
-	imshow("janelaOriginal", imageO);
-	namedWindow("janelaNegativo", WINDOW_AUTOSIZE);
-	imshow("janelaNegativo", image);
-	waitKey();
+==== 9.1.1 Código & Resultado
 
-	return 0;
-}
-----
+== 10. Detecção de bordas com o algoritmo de Canny
 
-== 2. Dawn on the Plateau
+=== 10.1 Canny & Pontilhismo
 
-=== 2.1. Sunshine
+==== 10.1.1 Código & Resultado
 
-Hanging from...
+== 11. Quantização vetorial com k-means
+
+=== 11.1 K-means
+
+==== 11.1.1 Código & Resultado
