@@ -24,7 +24,7 @@ efeitos artísticos ou estilísticos.
 
 ==== 1.1.1. Código & Resultado. 
 
-[source,c++]
+[source,cpp]
 .regions.cpp
 ----
 #include <iostream>
@@ -152,8 +152,6 @@ int main() {
 
 }
 ----
-
-img::<C:\Users\User\Desktop\UFRN\9° semestre\pdi\KempesBarbosa.github.io\imagem>[alt="Foto original"]
 
 === 1.2 Troca de regiões 
 
