@@ -943,8 +943,10 @@ preencher áreas vazias ou ausentes em uma imagem, com o objetivo de restaurar o
 perdidas. Essas regiões podem ser buracos, objetos removidos ou áreas danificadas na imagem original.
 É importante mencionar que o resultado do preenchimento de regiões depende da natureza da área a ser
 preenchida e da qualidade dos dados disponíveis na imagem original. Em algumas situações, pode ser necessário
-usar técnicas mais avançadas ou até mesmo combinar várias abordagens para obter resultados satisfatórios.
-Além disso, é importante ressaltar que o preenchimento de regiões em uma imagem pode introduzir informações
+usar técnicas mais avançadas ou até mesmo combinar várias abordagens para obter resultados satisfatórios.</p>
+</div>
+<div class="paragraph">
+<p>Além disso, é importante ressaltar que o preenchimento de regiões em uma imagem pode introduzir informações
 artificiais ou imprecisas, especialmente em áreas complexas ou com texturas irregulares. Portanto, é essencial
 avaliar cuidadosamente os resultados e, se necessário, realizar ajustes manuais ou refinamentos adicionais para
 obter uma restauração adequada da imagem.</p>
@@ -954,8 +956,10 @@ obter uma restauração adequada da imagem.</p>
 <div class="paragraph">
 <p>O algoritmo Flood Fill (preenchimento por inundação) é uma técnica utilizada em processamento digital de
 imagens para preencher uma região contígua com uma cor ou padrão específico. O objetivo é identificar todos
-os pixels conectados a partir de um ponto inicial e atribuir-lhes a cor desejada.
-O algoritmo Flood Fill é amplamente utilizado em aplicações como edição de imagens, remoção de fundo, segmentação
+os pixels conectados a partir de um ponto inicial e atribuir-lhes a cor desejada.</p>
+</div>
+<div class="paragraph">
+<p>O algoritmo Flood Fill é amplamente utilizado em aplicações como edição de imagens, remoção de fundo, segmentação
 de objetos e detecção de contornos. No entanto, é importante considerar que a eficiência do algoritmo pode variar
 dependendo do tamanho da região a ser preenchida e da complexidade da imagem. Em casos de regiões muito grandes ou
 com muitos detalhes, outras técnicas mais avançadas podem ser necessárias para obter resultados precisos e eficientes.</p>
@@ -1078,11 +1082,77 @@ int main() {
 <div class="sect1">
 <h2 id="_5_manipulação_de_histogramas">5. Manipulação de histogramas</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>A manipulação de histogramas é uma técnica utilizada em processamento digital de imagens para
+alterar o contraste, brilho ou distribuição tonal de uma imagem, com base na análise e modificação do seu histograma.</p>
+</div>
+<div class="paragraph">
+<p>O histograma de uma imagem é uma representação gráfica da distribuição de intensidades dos pixels ao longo de uma escala
+de tons. Ele mostra a frequência de ocorrência de cada valor de intensidade na imagem.</p>
+</div>
+<div class="paragraph">
+<p>A manipulação de histogramas pode ser aplicada em várias áreas, como melhoria de qualidade de imagem, correção de
+iluminação, segmentação de objetos e detecção de características. É uma técnica poderosa para ajustar e realçar
+informações em uma imagem com base na análise da distribuição tonal dos pixels.</p>
+</div>
 <div class="sect2">
 <h3 id="_5_1_histograma">5.1 Histograma</h3>
+<div class="paragraph">
+<p>O histograma é uma ferramenta fundamental para a análise e processamento de sinais. Ele fornece informações importantes
+sobre a distribuição dos dados e pode revelar características como o valor médio, variação, assimetria e presença de
+picos ou ruído.</p>
+</div>
+<div class="paragraph">
+<p>Existem técnicas e algoritmos avançados que podem ser aplicados, dependendo das necessidades específicas do
+processamento de sinal. O histograma é uma ferramenta poderosa para analisar e manipular dados de sinal, ajudando
+a extrair informações importantes e melhorar a qualidade e a compreensão dos sinais.</p>
+</div>
 <div class="sect3">
 <h4 id="_5_1_1_código_resultado">5.1.1 Código &amp; Resultado</h4>
+<div class="listingblock">
+<div class="title">histogram.cpp</div>
+<div class="content">
+<pre>#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv) {
+
+    Mat imagemOriginal, imagemCinza, imagemEqualizada;
+    char diretorio[1000];
+
+    // Carregar a imagem
+    cout &lt;&lt; "Digite a localizacao da imagem: " &lt;&lt; endl;
+    cout &lt;&lt; "EX.: C:\\User\\Desktop\\&lt;nomedaimagem&gt;.&lt;png ou jpeg&gt;" &lt;&lt; endl;
+    cin &gt;&gt; diretorio;
+
+    imagemOriginal = imread(diretorio);
+
+    if (imagemOriginal.empty()) {
+        cout &lt;&lt; "Não foi possível carregar a imagem" &lt;&lt; endl;
+        return -1;
+    }
+
+    // Converter para escala de cinza
+    cvtColor(imagemOriginal, imagemCinza, COLOR_BGR2GRAY);
+
+    // Equalizar o histograma
+    equalizeHist(imagemCinza, imagemEqualizada);
+
+    imshow("Imagem em Escala de Cinza", imagemCinza);
+    imwrite("ImagememEscaladeCinza.png", imagemCinza);
+    imshow("Imagem Equalizada", imagemEqualizada);
+    imwrite("ImagemEqualizada.png", imagemEqualizada);
+
+
+    waitKey(0);
+
+    return 0;
+}</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1162,7 +1232,7 @@ int main() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-29 20:28:22 -0300
+Last updated 2023-06-29 20:58:14 -0300
 </div>
 </div>
 </body>

@@ -414,6 +414,7 @@ perdidas. Essas regiões podem ser buracos, objetos removidos ou áreas danifica
 É importante mencionar que o resultado do preenchimento de regiões depende da natureza da área a ser 
 preenchida e da qualidade dos dados disponíveis na imagem original. Em algumas situações, pode ser necessário 
 usar técnicas mais avançadas ou até mesmo combinar várias abordagens para obter resultados satisfatórios.
+
 Além disso, é importante ressaltar que o preenchimento de regiões em uma imagem pode introduzir informações 
 artificiais ou imprecisas, especialmente em áreas complexas ou com texturas irregulares. Portanto, é essencial 
 avaliar cuidadosamente os resultados e, se necessário, realizar ajustes manuais ou refinamentos adicionais para 
@@ -424,6 +425,7 @@ obter uma restauração adequada da imagem.
 O algoritmo Flood Fill (preenchimento por inundação) é uma técnica utilizada em processamento digital de 
 imagens para preencher uma região contígua com uma cor ou padrão específico. O objetivo é identificar todos 
 os pixels conectados a partir de um ponto inicial e atribuir-lhes a cor desejada.
+
 O algoritmo Flood Fill é amplamente utilizado em aplicações como edição de imagens, remoção de fundo, segmentação 
 de objetos e detecção de contornos. No entanto, é importante considerar que a eficiência do algoritmo pode variar 
 dependendo do tamanho da região a ser preenchida e da complexidade da imagem. Em casos de regiões muito grandes ou 
@@ -543,9 +545,72 @@ int main() {
 
 == 5. Manipulação de histogramas
 
+A manipulação de histogramas é uma técnica utilizada em processamento digital de imagens para 
+alterar o contraste, brilho ou distribuição tonal de uma imagem, com base na análise e modificação do seu histograma.
+
+O histograma de uma imagem é uma representação gráfica da distribuição de intensidades dos pixels ao longo de uma escala
+de tons. Ele mostra a frequência de ocorrência de cada valor de intensidade na imagem.
+
+A manipulação de histogramas pode ser aplicada em várias áreas, como melhoria de qualidade de imagem, correção de 
+iluminação, segmentação de objetos e detecção de características. É uma técnica poderosa para ajustar e realçar 
+informações em uma imagem com base na análise da distribuição tonal dos pixels.
+
 === 5.1 Histograma
 
+O histograma é uma ferramenta fundamental para a análise e processamento de sinais. Ele fornece informações importantes
+sobre a distribuição dos dados e pode revelar características como o valor médio, variação, assimetria e presença de 
+picos ou ruído.
+
+Existem técnicas e algoritmos avançados que podem ser aplicados, dependendo das necessidades específicas do 
+processamento de sinal. O histograma é uma ferramenta poderosa para analisar e manipular dados de sinal, ajudando 
+a extrair informações importantes e melhorar a qualidade e a compreensão dos sinais.
+
 ==== 5.1.1 Código & Resultado
+
+[souce,cpp]
+.histogram.cpp
+
+----
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv) {
+
+    Mat imagemOriginal, imagemCinza, imagemEqualizada;
+    char diretorio[1000];
+
+    // Carregar a imagem
+    cout << "Digite a localizacao da imagem: " << endl;
+    cout << "EX.: C:\\User\\Desktop\\<nomedaimagem>.<png ou jpeg>" << endl;
+    cin >> diretorio;
+
+    imagemOriginal = imread(diretorio);
+
+    if (imagemOriginal.empty()) {
+        cout << "Não foi possível carregar a imagem" << endl;
+        return -1;
+    }
+
+    // Converter para escala de cinza
+    cvtColor(imagemOriginal, imagemCinza, COLOR_BGR2GRAY);
+
+    // Equalizar o histograma
+    equalizeHist(imagemCinza, imagemEqualizada);
+
+    imshow("Imagem em Escala de Cinza", imagemCinza);
+    imwrite("ImagememEscaladeCinza.png", imagemCinza);
+    imshow("Imagem Equalizada", imagemEqualizada);
+    imwrite("ImagemEqualizada.png", imagemEqualizada);
+
+
+    waitKey(0);
+
+    return 0;
+}
+----
 
 == 6. Filtragem no domínio espacial I
 
