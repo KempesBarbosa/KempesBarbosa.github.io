@@ -451,7 +451,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_2_serialização_via_filestore">2. Serialização via FileStore</a>
 <ul class="sectlevel2">
-<li><a href="#_2_1_filestore_cpp">2.1. filestore.cpp</a></li>
+<li><a href="#_2_1_filestore">2.1. FileStore</a></li>
 </ul>
 </li>
 <li><a href="#_3_decomposição_de_imagens_em_planos_de_bits">3. Decomposição de imagens em planos de bits</a>
@@ -528,6 +528,12 @@ efeitos artísticos ou estilísticos.</p>
 </div>
 <div class="sect3">
 <h4 id="_1_1_1_código_resultado">1.1.1. Código &amp; Resultado.</h4>
+<div class="paragraph">
+<p>Implemente um programa regions.cpp. Esse programa deverá solicitar ao usuário as coordenadas de dois pontos
+P1 e P2 localizados dentro dos limites do tamanho da imagem e exibir que lhe for fornecida. Entretanto, a
+região definida pelo retângulo de vértices opostos definidos pelos pontos P1 e P2 será exibida com o negativo
+da imagem na região correspondente.</p>
+</div>
 <div class="listingblock">
 <div class="title">regions.cpp</div>
 <div class="content">
@@ -671,6 +677,9 @@ e, em seguida, reverter a imagem para o domínio espacial, se necessário.</p>
 </div>
 <div class="sect3">
 <h4 id="_1_2_1_código_resultado">1.2.1 Código &amp; Resultado.</h4>
+<div class="paragraph">
+<p>Implemente um programa trocaregioes.cpp. Seu programa deverá trocar os quadrantes em diagonal na imagem.</p>
+</div>
 <div class="listingblock">
 <div class="title">regions.cpp</div>
 <div class="content">
@@ -743,11 +752,79 @@ int main() {
 <div class="sect1">
 <h2 id="_2_serialização_via_filestore">2. Serialização via FileStore</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>A serialização refere-se ao processo de converter dados em uma representação que possa ser armazenada ou transmitida, permitindo sua recuperação posterior. No contexto da programação, a serialização é comumente usada para salvar dados em um formato persistente, como um arquivo, para que possam ser recuperados posteriormente e usados novamente.</p>
+</div>
+<div class="paragraph">
+<p>O ponto flutuante é um formato numérico usado para representar números reais em computadores. Ele permite representar uma ampla gama de valores, incluindo números fracionários e números muito grandes ou muito pequenos. A serialização de dados em ponto flutuante via FileStorage é especialmente útil quando se lida com grandes conjuntos de dados numéricos, como matrizes ou imagens, que precisam ser armazenados e recuperados sem perda de precisão.</p>
+</div>
 <div class="sect2">
-<h3 id="_2_1_filestore_cpp">2.1. filestore.cpp</h3>
+<h3 id="_2_1_filestore">2.1. FileStore</h3>
+<div class="paragraph">
+<p>O FileStorage é uma funcionalidade oferecida por algumas bibliotecas de programação, como OpenCV, que permite armazenar dados em um arquivo com uma estrutura organizada. Essa estrutura pode incluir seções, como grupos ou tags, que ajudam a organizar os dados serializados. Além disso, o FileStorage fornece métodos para escrever e ler dados em vários formatos, incluindo números de ponto flutuante.</p>
+</div>
 <div class="sect3">
 <h4 id="_2_1_1_código_resultado">2.1.1 Código &amp; Resultado.</h4>
+<div class="paragraph">
+<p>Crie um programa que gere uma imagem de dimensões 256x256 pixels contendo uma senóide de 4 períodos com amplitude de 127 desenhada na horizontal. Grave a imagem no formato PNG e no formato YML. Compare os arquivos gerados, extraindo uma linha de cada imagem gravada e comparando a diferença entre elas. Trace um gráfico da diferença calculada ao longo da linha correspondente extraída nas imagens. O que você observa?</p>
+</div>
+<div class="listingblock">
+<div class="title">regions.cpp</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
 
+using namespace std;
+using namespace cv;
+
+int SIDE = 256;
+int PERIODOS = 4;
+int M_PI = 3.141516;
+
+
+int main(int argc, char** argv) {
+    cout &lt;&lt; "INICIANDO..." &lt;&lt; endl;
+
+    stringstream ss_img, ss_yml;
+    Mat image;
+
+    ss_yml &lt;&lt; "senoide-" &lt;&lt; SIDE &lt;&lt; ".yml";
+    image = Mat::zeros(SIDE, SIDE, CV_32FC1);
+
+    FileStorage fs(ss_yml.str(), FileStorage::WRITE);
+
+    for (int i = 0; i &lt; SIDE; i++) {
+        for (int j = 0; j &lt; SIDE; j++) {
+            image.at&lt;float&gt;(i, j) = 127 * sin(2 * M_PI * PERIODOS * j / SIDE) + 128;
+        }
+    }
+
+    fs &lt;&lt; "mat" &lt;&lt; image;
+    fs.release();
+
+    normalize(image, image, 0, 255, NORM_MINMAX);
+    image.convertTo(image, CV_8U);
+    ss_img &lt;&lt; "senoide-" &lt;&lt; SIDE &lt;&lt; ".png";
+    imwrite(ss_img.str(), image);
+
+    cout &lt;&lt; "Matriz da imagem png... " &lt;&lt; endl;
+    cout &lt;&lt; image &lt;&lt; endl;
+
+    fs.open(ss_yml.str(), FileStorage::READ);
+    fs["mat"] &gt;&gt; image;
+
+    normalize(image, image, 0, 255, NORM_MINMAX);
+    image.convertTo(image, CV_8U);
+
+    imshow("image", image);
+    waitKey();
+
+    return 0;
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -863,7 +940,7 @@ int main() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-29 16:37:00 -0300
+Last updated 2023-06-29 16:47:24 -0300
 </div>
 </div>
 </body>
