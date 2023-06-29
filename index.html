@@ -937,11 +937,140 @@ int main() {
 <div class="sect1">
 <h2 id="_4_preenchendo_regiões">4. Preenchendo regiões</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>O preenchimento de regiões em processamento digital de imagens refere-se a técnicas utilizadas para
+preencher áreas vazias ou ausentes em uma imagem, com o objetivo de restaurar ou completar informações
+perdidas. Essas regiões podem ser buracos, objetos removidos ou áreas danificadas na imagem original.
+É importante mencionar que o resultado do preenchimento de regiões depende da natureza da área a ser
+preenchida e da qualidade dos dados disponíveis na imagem original. Em algumas situações, pode ser necessário
+usar técnicas mais avançadas ou até mesmo combinar várias abordagens para obter resultados satisfatórios.
+Além disso, é importante ressaltar que o preenchimento de regiões em uma imagem pode introduzir informações
+artificiais ou imprecisas, especialmente em áreas complexas ou com texturas irregulares. Portanto, é essencial
+avaliar cuidadosamente os resultados e, se necessário, realizar ajustes manuais ou refinamentos adicionais para
+obter uma restauração adequada da imagem.</p>
+</div>
 <div class="sect2">
 <h3 id="_4_1_floodfill">4.1 FloodFill</h3>
+<div class="paragraph">
+<p>O algoritmo Flood Fill (preenchimento por inundação) é uma técnica utilizada em processamento digital de
+imagens para preencher uma região contígua com uma cor ou padrão específico. O objetivo é identificar todos
+os pixels conectados a partir de um ponto inicial e atribuir-lhes a cor desejada.
+O algoritmo Flood Fill é amplamente utilizado em aplicações como edição de imagens, remoção de fundo, segmentação
+de objetos e detecção de contornos. No entanto, é importante considerar que a eficiência do algoritmo pode variar
+dependendo do tamanho da região a ser preenchida e da complexidade da imagem. Em casos de regiões muito grandes ou
+com muitos detalhes, outras técnicas mais avançadas podem ser necessárias para obter resultados precisos e eficientes.</p>
+</div>
 <div class="sect3">
 <h4 id="_4_1_1_código_resultado">4.1.1 Código &amp; Resultado.</h4>
+<div class="paragraph">
+<p>É possível verificar que caso existam mais de 255 objetos na cena, o processo de rotulação poderá ficar comprometido.
+Identifique a situação em que isso ocorre e proponha uma solução para este problema. Aprimore o algoritmo de contagem
+apresentado para identificar regiões com ou sem buracos internos que existam na cena. Assuma que objetos com mais de um
+buraco podem existir. Inclua suporte no seu algoritmo para não contar bolhas que tocam as bordas da imagem. Não se pode
+presumir, a priori, que elas tenham buracos ou não.</p>
+</div>
+<div class="listingblock">
+<div class="title">labeling.cpp</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+using namespace std;
+
+int main() {
+	cout &lt;&lt; "INICIANDO O PROGRAMA..." &lt;&lt; endl;
+	// INICIALIZANDO VÁRIAVEIS ...
+	char diretorio[1000];
+	Mat image;
+	int cols, rows, bburacos = 0, bolhas=0;
+	Point p;
+
+	// RECEBENDO IMAGEM ...
+	do {
+		cout &lt;&lt; "Digite a localizacao da imagem: " &lt;&lt; endl;
+		cout &lt;&lt; "EX.: C:\\User\\Desktop\\&lt;nomedaimagem&gt;.&lt;png ou jpeg&gt;" &lt;&lt; endl;
+		cin &gt;&gt; diretorio;
+
+		image = imread(diretorio, IMREAD_GRAYSCALE);
+
+		if (!image.data) {
+			cout &lt;&lt; "Imagem nao encontrada!" &lt;&lt; endl;
+			cout &lt;&lt; "Verifique se a escrita esta correta." &lt;&lt; endl;
+		}
+	} while (!image.data);
+
+    imshow("janelaOriginal", image);
+
+    cols = image.cols;
+    rows = image.rows;
+    p.x = 0;
+    p.y = 0;
+
+    // REMOVENDO AS BOLHAS LOCALIZADAS NAS BORDAS ...
+    cout &lt;&lt; "Removendo as bolhas localizadas nas bordas..." &lt;&lt; endl;
+
+    for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; cols; j++) {
+            if (image.at&lt;uchar&gt;(i, j) == 255) {
+                if (i == 0 || j == 0 || i == (rows - 1) || j == (cols - 1)) {
+                    p.x = j;
+                    p.y = i;
+                    floodFill(image, p, 0);
+                }
+            }
+        }
+    }
+
+    p.x = 0;
+    p.y = 0;
+    floodFill(image, p, 200);
+
+    for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; cols; j++) {
+            if (image.at&lt;uchar&gt;(i, j) == 255) {
+                p.x = j;
+                p.y = i;
+                bolhas++;
+                floodFill(image, p, 30);
+            }
+        }
+    }
+
+    cout &lt;&lt; "Operacao finalizada ... " &lt;&lt; endl;
+    imshow("JanelaSBolhas", image);
+    imwrite("JanelaSBolhas.png", image);
+    waitKey();
+
+    // CONTANDO QUANTAS BOLHAS TEM BURACOS...
+    cout &lt;&lt; "Contando quantas bolhas tem buraco..." &lt;&lt; endl;
+
+    for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; cols; j++) {
+            if (image.at&lt;uchar&gt;(i, j) == 0) {
+                if (image.at&lt;uchar&gt;(i - 1, j) != 200) {
+                    bburacos++;
+                    p.x = j;
+                    p.y = i;
+                    floodFill(image, p, 200);
+                }
+            }
+        }
+    }
+
+    cout &lt;&lt; "Operacao finalizada... " &lt;&lt; endl;
+    imshow("labeling", image);
+    imwrite("labeling.png", image);
+
+    cout &lt;&lt; "total de bolhas com buracos: " &lt;&lt; bburacos &lt;&lt; endl;
+    cout &lt;&lt; "total de bolhas sem buracos: " &lt;&lt; bolhas - bburacos &lt;&lt; endl;
+    cout &lt;&lt; "total de bolhas: " &lt;&lt; bolhas &lt;&lt; endl;
+    waitKey();
+
+    return 0;
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1033,7 +1162,7 @@ int main() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-29 20:18:57 -0300
+Last updated 2023-06-29 20:28:22 -0300
 </div>
 </div>
 </body>
