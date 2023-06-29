@@ -1,5 +1,5 @@
 = Processamento Digital de Imagens
-Gabriel Souto Lozano Barbosa 
+Gabriel Souto Lozano Barbosa - gabriel.barbosa.082@ufrn.edu.br
 :toc: left
 
 == 1. Manipulando pixels em uma imagem.
@@ -172,7 +172,7 @@ e, em seguida, reverter a imagem para o domínio espacial, se necessário.
 Implemente um programa trocaregioes.cpp. Seu programa deverá trocar os quadrantes em diagonal na imagem. 
 
 [source,cpp]
-.regions.cpp
+.trocaderegioes.cpp
 
 ----
 // Código realizado para rodar em WINDOWS sem makeFile, atente-se as intruções! 
@@ -239,20 +239,31 @@ int main() {
 
 == 2. Serialização via FileStore
 
-A serialização refere-se ao processo de converter dados em uma representação que possa ser armazenada ou transmitida, permitindo sua recuperação posterior. No contexto da programação, a serialização é comumente usada para salvar dados em um formato persistente, como um arquivo, para que possam ser recuperados posteriormente e usados novamente.
+A serialização refere-se ao processo de converter dados em uma representação que possa ser armazenada ou transmitida, 
+permitindo sua recuperação posterior. No contexto da programação, a serialização é comumente usada para salvar dados em 
+um formato persistente, como um arquivo, para que possam ser recuperados posteriormente e usados novamente.
 
-O ponto flutuante é um formato numérico usado para representar números reais em computadores. Ele permite representar uma ampla gama de valores, incluindo números fracionários e números muito grandes ou muito pequenos. A serialização de dados em ponto flutuante via FileStorage é especialmente útil quando se lida com grandes conjuntos de dados numéricos, como matrizes ou imagens, que precisam ser armazenados e recuperados sem perda de precisão.
+O ponto flutuante é um formato numérico usado para representar números reais em computadores. Ele permite representar 
+uma ampla gama de valores, incluindo números fracionários e números muito grandes ou muito pequenos. A serialização de 
+dados em ponto flutuante via FileStorage é especialmente útil quando se lida com grandes conjuntos de dados numéricos, 
+como matrizes ou imagens, que precisam ser armazenados e recuperados sem perda de precisão.
 
 === 2.1. FileStore
 
-O FileStorage é uma funcionalidade oferecida por algumas bibliotecas de programação, como OpenCV, que permite armazenar dados em um arquivo com uma estrutura organizada. Essa estrutura pode incluir seções, como grupos ou tags, que ajudam a organizar os dados serializados. Além disso, o FileStorage fornece métodos para escrever e ler dados em vários formatos, incluindo números de ponto flutuante.
+O FileStorage é uma funcionalidade oferecida por algumas bibliotecas de programação, como OpenCV, que permite armazenar 
+dados em um arquivo com uma estrutura organizada. Essa estrutura pode incluir seções, como grupos ou tags, que ajudam a 
+organizar os dados serializados. Além disso, o FileStorage fornece métodos para escrever e ler dados em vários formatos, 
+incluindo números de ponto flutuante.
 
 ==== 2.1.1 Código & Resultado.
 
-Crie um programa que gere uma imagem de dimensões 256x256 pixels contendo uma senóide de 4 períodos com amplitude de 127 desenhada na horizontal. Grave a imagem no formato PNG e no formato YML. Compare os arquivos gerados, extraindo uma linha de cada imagem gravada e comparando a diferença entre elas. Trace um gráfico da diferença calculada ao longo da linha correspondente extraída nas imagens. O que você observa?
+Crie um programa que gere uma imagem de dimensões 256x256 pixels contendo uma senóide de 4 períodos com amplitude de 127 
+desenhada na horizontal. Grave a imagem no formato PNG e no formato YML. Compare os arquivos gerados, extraindo uma linha
+ de cada imagem gravada e comparando a diferença entre elas. Trace um gráfico da diferença calculada ao longo da linha 
+ correspondente extraída nas imagens. O que você observa?
 
 [source,cpp]
-.regions.cpp
+.filestorage.cpp
 
 ----
 #include <iostream>
@@ -311,9 +322,89 @@ int main(int argc, char** argv) {
 
 == 3. Decomposição de imagens em planos de bits
 
+A decomposição de imagens em planos de bits é um processo no qual uma imagem digital é dividida em 
+diferentes planos, cada um representando uma determinada quantidade de bits. Essa decomposição permite 
+visualizar a contribuição de cada plano de bits para a formação da imagem final e pode ser útil em várias 
+aplicações, como processamento de imagem, compressão de dados e análise de características visuais.
+No contexto da decomposição em planos de bits, consideraremos imagens em escala de cinza, onde cada pixel é 
+representado por um único valor de intensidade. O valor de intensidade de um pixel é geralmente representado 
+por um número binário, que é composto por uma sequência de bits. O número de bits utilizados para representar 
+a intensidade de cada pixel determina a quantidade de níveis de cinza disponíveis na imagem.
+
 === 3.1 Esteganografia em imagens digitais
 
+A esteganografia em imagens digitais é uma técnica que envolve esconder informações ou dados dentro de uma imagem 
+digital de forma imperceptível aos olhos humanos. É uma maneira de ocultar uma mensagem dentro de outra imagem, 
+conhecida como imagem de cobertura, de modo que a presença da mensagem oculta não seja facilmente detectada.
+Existem várias abordagens para realizar esteganografia em imagens digitais. Uma das técnicas mais comuns é a 
+substituição do bit menos significativo (LSB - Least Significant Bit) dos pixels da imagem de cobertura pelos 
+bits da mensagem que se deseja ocultar. Como o bit menos significativo tem menos influência na representação visual 
+da imagem, a substituição desse bit por informações ocultas geralmente não causa alterações perceptíveis na imagem.
+
 ==== 3.1.1 Código & Resultado.
+
+Escreva um programa que recupere a imagem codificada de uma imagem resultante de esteganografia. Lembre-se que os bits 
+menos significativos dos pixels da imagem fornecida deverão compor os bits mais significativos dos pixels da imagem 
+recuperada. O programa deve receber como parâmetros de linha de comando o nome da imagem resultante da esteganografia. 
+
+[source,cpp]
+.decode.cpp 
+----
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace std;
+using namespace cv;
+
+int main() {
+	Mat imagemCodificada, imagemPortadora, imagemEscondida;
+	Vec3b valCod, valPort, valEsc;
+	int nbits = 3;
+	char diretorio[1000];
+
+	// Recebendo a imagem;
+	do {
+		cout << "Digite a localizacao da imagem codificada: " << endl;
+		cout << "EX.: C:\\User\\Desktop\\<nomedaimagem>.<png ou jpeg>" << endl;
+		cin >> diretorio;
+
+		imagemCodificada = imread(diretorio, IMREAD_COLOR);
+
+		if (!imagemCodificada.data) {
+			cout << "Imagem nao encontrada!" << endl;
+			cout << "Verifique o endereco digitado." << endl;
+		}
+	} while (!imagemCodificada.data);
+
+	// Clonando;
+	imagemEscondida = imagemCodificada.clone();
+	imagemPortadora = imagemCodificada.clone();
+
+	// Realiazando a decodificação da imagem;
+	for (int i = 0; i < imagemCodificada.rows; i++) {
+		for (int j = 0; j < imagemCodificada.cols; j++) {
+			valCod = imagemCodificada.at<Vec3b>(i, j);
+
+			valEsc[0] = valCod[0] << (8 - nbits);
+			valEsc[1] = valCod[1] << (8 - nbits);
+			valEsc[2] = valCod[2] << (8 - nbits);
+
+			imagemEscondida.at<Vec3b>(i, j) = valEsc;
+
+			valPort[0] = valCod[0] >> nbits << nbits;
+			valPort[1] = valCod[1] >> nbits << nbits;
+			valPort[2] = valCod[2] >> nbits << nbits;
+
+			imagemPortadora.at<Vec3b>(i, j) = valPort;
+		}
+	}	
+
+	imwrite("imagemEscondida.png", imagemEscondida);
+	imwrite("imagemPortadora.png", imagemPortadora);
+
+	return 0;
+}
+----
 
 == 4. Preenchendo regiões
 
