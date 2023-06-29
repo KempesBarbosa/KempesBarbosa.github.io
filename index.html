@@ -661,9 +661,81 @@ int main() {
 </div>
 <div class="sect2">
 <h3 id="_1_2_troca_de_regiões">1.2 Troca de regiões</h3>
+<div class="paragraph">
+<p>A transposição de quadrante envolve a troca desses quadrantes, de modo que as baixas frequências fiquem
+no quadrante inferior direito e as altas frequências no quadrante superior esquerdo. Essa operação é
+frequentemente realizada para fins de visualização ou processamento de imagens, uma vez que a transposição
+pode melhorar a interpretação visual ou permitir a aplicação de determinadas técnicas de filtragem ou análise.
+Após a transposição de quadrante, é possível realizar operações de filtragem ou análise no domínio da frequência
+e, em seguida, reverter a imagem para o domínio espacial, se necessário.</p>
+</div>
 <div class="sect3">
 <h4 id="_1_2_1_código_resultado">1.2.1 Código &amp; Resultado.</h4>
+<div class="listingblock">
+<div class="title">regions.cpp</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">// Código realizado para rodar em WINDOWS sem makeFile, atente-se as intruções!
+#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace cv;
+using namespace std;
+
+int main() {
+	cout &lt;&lt; "INICIANDO..." &lt;&lt; endl;
+
+	//DEFININDO VARIAVEIS ...
+	char diretorio[10000];
+	Mat image, imageT;
+
+
+	//RECEBENDO LOCALIZAÇÃO DA IMAGEM...
+	do {
+		cout &lt;&lt; "Digite a localizacao da imagem: " &lt;&lt; endl;
+		cout &lt;&lt; "EX.: C:\\User\\Desktop\\&lt;nomedaimagem&gt;.&lt;png ou jpeg&gt;" &lt;&lt; endl;
+		cin &gt;&gt; diretorio;
+
+		image = imread(diretorio);
+
+		if (!image.data) {
+			cout &lt;&lt; "Imagem nao encontrada!" &lt;&lt; endl;
+			cout &lt;&lt; "Verifique se a escrita esta correta." &lt;&lt; endl;
+		}
+	} while (!image.data);
+
+	image.copyTo(imageT);
+
+	int rows4q, cols4q;
+
+	rows4q = image.rows / 2;
+	cols4q = image.cols / 2;
+
+	// DIVIDINDO OS QUADRANTES ...
+	Mat q1, q2, q3, q4;
+	q1 = image(Rect(0, 0, rows4q, cols4q)); // Esquerdo superior
+	q2 = image(Rect(0, cols4q, rows4q, cols4q)); // Direito superior
+	q3 = image(Rect(rows4q, 0, rows4q, cols4q)); // Esquerdo inferior
+	q4 = image(Rect(rows4q, cols4q, rows4q, cols4q)); // Direito inferior
+
+	cout &lt;&lt; rows4q &lt;&lt; " e " &lt;&lt; cols4q &lt;&lt; endl;
+
+	//TROCANDO OS QUADRANTES EM DIAGONAL ...
+	q1.copyTo(imageT(Rect(rows4q, cols4q, rows4q, cols4q)));
+	q2.copyTo(imageT(Rect(rows4q, 0, rows4q, cols4q)));
+	q3.copyTo(imageT(Rect(0, cols4q, rows4q, cols4q)));
+	q4.copyTo(imageT(Rect(0, 0, rows4q, cols4q)));
+
+	namedWindow("janelaOriginal", WINDOW_AUTOSIZE);
+	imshow("janelaOriginal", image);
+	namedWindow("janelaTrocado", WINDOW_AUTOSIZE);
+	imshow("janelaTrocado", imageT);
+	imwrite("janelaTrocado.png", imageT);
+	waitKey();
+
+	return 0;
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -791,7 +863,7 @@ int main() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-27 16:14:47 -0300
+Last updated 2023-06-29 16:37:00 -0300
 </div>
 </div>
 </body>

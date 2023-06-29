@@ -155,7 +155,80 @@ int main() {
 
 === 1.2 Troca de regiões 
 
+A transposição de quadrante envolve a troca desses quadrantes, de modo que as baixas frequências fiquem 
+no quadrante inferior direito e as altas frequências no quadrante superior esquerdo. Essa operação é 
+frequentemente realizada para fins de visualização ou processamento de imagens, uma vez que a transposição 
+pode melhorar a interpretação visual ou permitir a aplicação de determinadas técnicas de filtragem ou análise.
+Após a transposição de quadrante, é possível realizar operações de filtragem ou análise no domínio da frequência 
+e, em seguida, reverter a imagem para o domínio espacial, se necessário.
+
 ==== 1.2.1 Código & Resultado.
+
+[source,cpp]
+.regions.cpp
+
+----
+// Código realizado para rodar em WINDOWS sem makeFile, atente-se as intruções! 
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
+using namespace std;
+
+int main() {
+	cout << "INICIANDO..." << endl;
+
+	//DEFININDO VARIAVEIS ...
+	char diretorio[10000];
+	Mat image, imageT;
+
+
+	//RECEBENDO LOCALIZAÇÃO DA IMAGEM...
+	do {
+		cout << "Digite a localizacao da imagem: " << endl;
+		cout << "EX.: C:\\User\\Desktop\\<nomedaimagem>.<png ou jpeg>" << endl;
+		cin >> diretorio;
+
+		image = imread(diretorio);
+
+		if (!image.data) {
+			cout << "Imagem nao encontrada!" << endl;
+			cout << "Verifique se a escrita esta correta." << endl;
+		}
+	} while (!image.data);
+
+	image.copyTo(imageT);
+
+	int rows4q, cols4q;
+
+	rows4q = image.rows / 2;
+	cols4q = image.cols / 2;
+
+	// DIVIDINDO OS QUADRANTES ...
+	Mat q1, q2, q3, q4;
+	q1 = image(Rect(0, 0, rows4q, cols4q)); // Esquerdo superior
+	q2 = image(Rect(0, cols4q, rows4q, cols4q)); // Direito superior
+	q3 = image(Rect(rows4q, 0, rows4q, cols4q)); // Esquerdo inferior
+	q4 = image(Rect(rows4q, cols4q, rows4q, cols4q)); // Direito inferior
+
+	cout << rows4q << " e " << cols4q << endl;
+
+	//TROCANDO OS QUADRANTES EM DIAGONAL ... 
+	q1.copyTo(imageT(Rect(rows4q, cols4q, rows4q, cols4q)));
+	q2.copyTo(imageT(Rect(rows4q, 0, rows4q, cols4q)));
+	q3.copyTo(imageT(Rect(0, cols4q, rows4q, cols4q)));
+	q4.copyTo(imageT(Rect(0, 0, rows4q, cols4q)));
+
+	namedWindow("janelaOriginal", WINDOW_AUTOSIZE);
+	imshow("janelaOriginal", image);
+	namedWindow("janelaTrocado", WINDOW_AUTOSIZE);
+	imshow("janelaTrocado", imageT);
+	imwrite("janelaTrocado.png", imageT);
+	waitKey();
+
+	return 0;
+}
+----
 
 == 2. Serialização via FileStore
 
