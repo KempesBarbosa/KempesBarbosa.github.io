@@ -567,8 +567,12 @@ a extrair informações importantes e melhorar a qualidade e a compreensão dos 
 
 ==== 5.1.1 Código & Resultado
 
+implemente um programa equalize.cpp. Este deverá, para cada imagem capturada, realizar a equalização do histogram 
+antes de exibir a imagem. Teste sua implementação apontando a câmera para ambientes com iluminações variadas e 
+observando o efeito gerado. Assuma que as imagens processadas serão em tons de cinza.
+
 [souce,cpp]
-.histogram.cpp
+.equalize.cpp
 
 ----
 #include <iostream>
@@ -604,8 +608,6 @@ int main(int argc, char** argv) {
     imwrite("ImagememEscaladeCinza.png", imagemCinza);
     imshow("Imagem Equalizada", imagemEqualizada);
     imwrite("ImagemEqualizada.png", imagemEqualizada);
-
-
     waitKey(0);
 
     return 0;

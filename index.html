@@ -1109,8 +1109,13 @@ a extrair informações importantes e melhorar a qualidade e a compreensão dos 
 </div>
 <div class="sect3">
 <h4 id="_5_1_1_código_resultado">5.1.1 Código &amp; Resultado</h4>
+<div class="paragraph">
+<p>implemente um programa equalize.cpp. Este deverá, para cada imagem capturada, realizar a equalização do histogram
+antes de exibir a imagem. Teste sua implementação apontando a câmera para ambientes com iluminações variadas e
+observando o efeito gerado. Assuma que as imagens processadas serão em tons de cinza.</p>
+</div>
 <div class="listingblock">
-<div class="title">histogram.cpp</div>
+<div class="title">equalize.cpp</div>
 <div class="content">
 <pre>#include &lt;iostream&gt;
 #include &lt;opencv2/opencv.hpp&gt;
@@ -1145,8 +1150,6 @@ int main(int argc, char** argv) {
     imwrite("ImagememEscaladeCinza.png", imagemCinza);
     imshow("Imagem Equalizada", imagemEqualizada);
     imwrite("ImagemEqualizada.png", imagemEqualizada);
-
-
     waitKey(0);
 
     return 0;
@@ -1232,7 +1235,7 @@ int main(int argc, char** argv) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-29 20:58:14 -0300
+Last updated 2023-06-29 21:03:42 -0300
 </div>
 </div>
 </body>
