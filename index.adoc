@@ -1,6 +1,7 @@
 = Processamento Digital de Imagens
 Gabriel Souto Lozano Barbosa - gabriel.barbosa.082@ufrn.edu.br
 :toc: left
+:imagesdir: https://github.com/KempesBarbosa/KempesBarbosa.github.io/tree/main/imagem
 
 == 1. Manipulando pixels em uma imagem.
 
@@ -157,6 +158,8 @@ int main() {
 
 }
 ----
+
+image::https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg
 
 === 1.2 Troca de regiões 
 
