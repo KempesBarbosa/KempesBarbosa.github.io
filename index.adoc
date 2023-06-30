@@ -159,7 +159,7 @@ int main() {
 }
 ----
 
-image::https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg
+image::https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/biel.png[]
 
 === 1.2 Troca de regiões 
 
