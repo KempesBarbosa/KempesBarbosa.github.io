@@ -159,7 +159,9 @@ int main() {
 }
 ----
 
-image::https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/biel.png[]
+image::https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/biel.png[biel,256,256]
+
+image::https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/janelaNegativo.png[janelaNegativo,256,256]
 
 === 1.2 Troca de regiões 
 
