@@ -472,31 +472,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_6_filtragem_no_domínio_espacial_i">6. Filtragem no domínio espacial I.</a>
 <ul class="sectlevel2">
 <li><a href="#_6_1_laplaciano_do_gaussiano">6.1 Laplaciano do Gaussiano.</a></li>
+<li><a href="#_6_2_tiltshift">6.2 TiltShift</a></li>
 </ul>
 </li>
-<li><a href="#_7_filtragem_no_domínio_espacial_ii">7. Filtragem no domínio espacial II</a>
+<li><a href="#_7_a_tranformada_discreta_de_fourier">7. A Tranformada Discreta de Fourier</a>
 <ul class="sectlevel2">
-<li><a href="#_7_1_tiltshift">7.1 TiltShift</a></li>
+<li><a href="#_7_1">7.1</a></li>
 </ul>
 </li>
-<li><a href="#_8_a_tranformada_discreta_de_fourier">8. A Tranformada Discreta de Fourier</a>
+<li><a href="#_8_filtragem_no_domínio_da_frequência">8. Filtragem no Domínio da Frequência</a>
 <ul class="sectlevel2">
-<li><a href="#_8_1">8.1</a></li>
+<li><a href="#_8_1_filtro_homomórfico">8.1 Filtro Homomórfico</a></li>
 </ul>
 </li>
-<li><a href="#_9_filtragem_no_domínio_da_frequência">9. Filtragem no Domínio da Frequência</a>
+<li><a href="#_9_detecção_de_bordas_com_o_algoritmo_de_canny">9. Detecção de bordas com o algoritmo de Canny</a>
 <ul class="sectlevel2">
-<li><a href="#_9_1_filtro_homomórfico">9.1 Filtro Homomórfico</a></li>
+<li><a href="#_9_1_canny_pontilhismo">9.1 Canny &amp; Pontilhismo</a></li>
 </ul>
 </li>
-<li><a href="#_10_detecção_de_bordas_com_o_algoritmo_de_canny">10. Detecção de bordas com o algoritmo de Canny</a>
+<li><a href="#_10_quantização_vetorial_com_k_means">10. Quantização vetorial com k-means</a>
 <ul class="sectlevel2">
-<li><a href="#_10_1_canny_pontilhismo">10.1 Canny &amp; Pontilhismo</a></li>
-</ul>
-</li>
-<li><a href="#_11_quantização_vetorial_com_k_means">11. Quantização vetorial com k-means</a>
-<ul class="sectlevel2">
-<li><a href="#_11_1_k_means">11.1 K-means</a></li>
+<li><a href="#_10_1_k_means">10.1 K-means</a></li>
 </ul>
 </li>
 </ul>
@@ -1202,7 +1198,7 @@ que envolvem a detecção de bordas e características pontuais.</p>
 <div class="sect3">
 <h4 id="_6_1_1_código_resultado">6.1.1 Código &amp; Resultado</h4>
 <div class="paragraph">
-<p>implemente um programa laplgauss.cpp. O programa deverá acrescentar mais uma funcionalidade ao exemplo fornecido,
+<p>Implemente um programa laplgauss.cpp. O programa deverá acrescentar mais uma funcionalidade ao exemplo fornecido,
 permitindo que seja calculado o laplaciano do gaussiano das imagens capturadas. Compare o resultado desse filtro
 com a simples aplicação do filtro laplaciano.</p>
 </div>
@@ -1311,13 +1307,132 @@ int main() {
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_6_2_tiltshift">6.2 TiltShift</h3>
+<div class="paragraph">
+<p>O efeito Tilt-Shift é uma técnica popular de pós-processamento de imagens que cria a ilusão de
+miniaturização em uma foto, fazendo com que a cena pareça uma maquete ou um modelo em escala reduzida.
+O nome "Tilt-Shift" refere-se aos movimentos de inclinação (tilt) e deslocamento (shift) que são usados
+em câmeras de grande formato para controlar a profundidade de campo e a perspectiva.</p>
+</div>
+<div class="paragraph">
+<p>Na fotografia tradicional, a miniaturização é alcançada através do uso de uma lente de deslocamento (shift lens)
+que permite controlar a área de foco seletivamente e criar uma profundidade de campo extremamente rasa.</p>
+</div>
+<div class="sect3">
+<h4 id="_6_2_1_código_resultado">6.2.1 Código &amp; Resultado</h4>
+<div class="listingblock">
+<div class="title">tiltshift</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+using namespace cv;
+using namespace std;
+
+double alfa;
+int center_slider = 0;
+int center_slider_max = 100;
+
+int alfa_slider = 0;
+int alfa_slider_max = 100;
+
+int top_slider = 0;
+int top_slider_max = 100;
+
+float media[] = { 1,1,1,1,1,1,1,1,1 };
+
+Mat imagemOriginal, imagemEditada, blended;
+Mat imageTop;
+
+char TrackbarName[50];
+
+void on_trackbar_blend(int, void*) {
+    alfa = (double)alfa_slider / alfa_slider_max;
+    addWeighted(imagemOriginal, alfa, imageTop, 1 - alfa, 0.0, blended);
+    imshow("addweighted", blended);
+}
+
+void on_trackbar_change(int, void*) {
+    imagemEditada.copyTo(imageTop);
+    Size size = imagemEditada.size();
+    int width = size.width;
+    int height = size.height;
+    int limit = top_slider * width / 100;
+    int base = center_slider * width / 100;
+    if (limit &gt; 0) {
+        if (base &gt;= 0 &amp;&amp; base &lt;= height - limit) {
+            Mat tmp = imagemOriginal(Rect(0, base, width, limit));
+            tmp.copyTo(imageTop(Rect(0, base, width, limit)));
+        }
+        else {
+            Mat tmp = imagemOriginal(Rect(0, height - limit, width, limit));
+            tmp.copyTo(imageTop(Rect(0, height - limit, width, limit)));
+        }
+    }
+    on_trackbar_blend(alfa_slider, 0);
+}
+
+int main() {
+    char diretorio[1000];
+
+    do {
+        cout &lt;&lt; "Digite o endereço da imagem" &lt;&lt; endl;
+        cout &lt;&lt; "C:\\Users\\User\\Desktop\...\\&lt;nomedaimagem&gt;.&lt;extencao&gt;" &lt;&lt; endl;
+        cin &gt;&gt; diretorio;
+
+        imagemOriginal = imread(diretorio);
+
+        if (!imagemOriginal.data) {
+            cout &lt;&lt; "Imagem nao encontrada!" &lt;&lt; endl;
+            cout &lt;&lt; "Verifique se a escrita esta correta." &lt;&lt; endl;
+        }
+    } while (!imagemOriginal.data);
+
+    imagemEditada = imagemOriginal.clone();
+    Mat aux, mask, mask1;
+
+    mask = Mat(3, 3, CV_32F, media);
+    scaleAdd(mask, 1 / 9.0, Mat::zeros(3, 3, CV_32F), mask1);
+    swap(mask, mask1);
+    imagemEditada.convertTo(aux, CV_32F);
+
+    for (int i = 0; i &lt; 10; i++) {
+        filter2D(aux, aux, aux.depth(), mask, Point(1, 1), 0);
+        aux = abs(aux);
+        aux.convertTo(imagemEditada, CV_8UC3);
+        imagemOriginal.copyTo(imageTop);
+    }
+
+    namedWindow("addweighted", 1);
+
+    sprintf_s(TrackbarName, "Decaimento");
+    createTrackbar(TrackbarName, "addweighted", &amp;alfa_slider, alfa_slider_max, on_trackbar_blend);
+    on_trackbar_blend(alfa_slider, 0);
+
+    sprintf_s(TrackbarName, "Altura ");
+    createTrackbar(TrackbarName, "addweighted", &amp;top_slider, top_slider_max, on_trackbar_change);
+    on_trackbar_change(top_slider, 0);
+
+    sprintf_s(TrackbarName, "Posição");
+    createTrackbar(TrackbarName, "addweighted", &amp;center_slider, center_slider_max, on_trackbar_change);
+
+    imwrite("imagemEditada.png", imagemEditada);
+
+    waitKey(0);
+    return 0;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_7_filtragem_no_domínio_espacial_ii">7. Filtragem no domínio espacial II</h2>
+<h2 id="_7_a_tranformada_discreta_de_fourier">7. A Tranformada Discreta de Fourier</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_7_1_tiltshift">7.1 TiltShift</h3>
+<h3 id="_7_1">7.1</h3>
 <div class="sect3">
 <h4 id="_7_1_1_código_resultado">7.1.1 Código &amp; Resultado</h4>
 
@@ -1326,10 +1441,10 @@ int main() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_8_a_tranformada_discreta_de_fourier">8. A Tranformada Discreta de Fourier</h2>
+<h2 id="_8_filtragem_no_domínio_da_frequência">8. Filtragem no Domínio da Frequência</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_8_1">8.1</h3>
+<h3 id="_8_1_filtro_homomórfico">8.1 Filtro Homomórfico</h3>
 <div class="sect3">
 <h4 id="_8_1_1_código_resultado">8.1.1 Código &amp; Resultado</h4>
 
@@ -1338,10 +1453,10 @@ int main() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_9_filtragem_no_domínio_da_frequência">9. Filtragem no Domínio da Frequência</h2>
+<h2 id="_9_detecção_de_bordas_com_o_algoritmo_de_canny">9. Detecção de bordas com o algoritmo de Canny</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_9_1_filtro_homomórfico">9.1 Filtro Homomórfico</h3>
+<h3 id="_9_1_canny_pontilhismo">9.1 Canny &amp; Pontilhismo</h3>
 <div class="sect3">
 <h4 id="_9_1_1_código_resultado">9.1.1 Código &amp; Resultado</h4>
 
@@ -1350,24 +1465,12 @@ int main() {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_10_detecção_de_bordas_com_o_algoritmo_de_canny">10. Detecção de bordas com o algoritmo de Canny</h2>
+<h2 id="_10_quantização_vetorial_com_k_means">10. Quantização vetorial com k-means</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_10_1_canny_pontilhismo">10.1 Canny &amp; Pontilhismo</h3>
+<h3 id="_10_1_k_means">10.1 K-means</h3>
 <div class="sect3">
 <h4 id="_10_1_1_código_resultado">10.1.1 Código &amp; Resultado</h4>
-
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_11_quantização_vetorial_com_k_means">11. Quantização vetorial com k-means</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_11_1_k_means">11.1 K-means</h3>
-<div class="sect3">
-<h4 id="_11_1_1_código_resultado">11.1.1 Código &amp; Resultado</h4>
 
 </div>
 </div>
@@ -1376,7 +1479,7 @@ int main() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-07-01 17:24:55 -0300
+Last updated 2023-07-01 17:37:41 -0300
 </div>
 </div>
 </body>
