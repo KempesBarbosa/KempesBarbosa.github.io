@@ -469,9 +469,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_5_1_histograma">5.1 Histograma</a></li>
 </ul>
 </li>
-<li><a href="#_6_filtragem_no_domínio_espacial_i">6. Filtragem no domínio espacial I</a>
+<li><a href="#_6_filtragem_no_domínio_espacial_i">6. Filtragem no domínio espacial I.</a>
 <ul class="sectlevel2">
-<li><a href="#_6_1_filtro_espacial">6.1 Filtro Espacial</a></li>
+<li><a href="#_6_1_laplaciano_do_gaussiano">6.1 Laplaciano do Gaussiano.</a></li>
 </ul>
 </li>
 <li><a href="#_7_filtragem_no_domínio_espacial_ii">7. Filtragem no domínio espacial II</a>
@@ -667,11 +667,13 @@ int main() {
 <div class="content">
 <img src="https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/biel.png" alt="biel" width="256" height="256">
 </div>
+<div class="title">Figure 1. Biel original</div>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/janelaNegativo.png" alt="janelaNegativo" width="256" height="256">
 </div>
+<div class="title">Figure 2. Biel com filtro negativo</div>
 </div>
 </div>
 </div>
@@ -1171,13 +1173,142 @@ int main(int argc, char** argv) {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_6_filtragem_no_domínio_espacial_i">6. Filtragem no domínio espacial I</h2>
+<h2 id="_6_filtragem_no_domínio_espacial_i">6. Filtragem no domínio espacial I.</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>A filtragem no domínio espacial refere-se à aplicação de um filtro direto aos pixels de uma
+imagem, no próprio domínio espacial da imagem. Nesse tipo de filtragem, cada pixel é processado
+individualmente, sem levar em consideração a estrutura ou as características globais da imagem.</p>
+</div>
+<div class="paragraph">
+<p>Existem vários tipos de filtros que podem ser aplicados no domínio espacial, e eles têm diferentes efeitos na imagem.
+Alguns exemplos comuns são: filtro de suavização, filtro de realce e filtro de nitidez. Esses são apenas alguns exemplos
+de filtros que podem ser aplicados no domínio espacial. A escolha do filtro depende das características específicas da
+imagem e do objetivo desejado. A filtragem no domínio espacial é uma técnica amplamente utilizada no processamento de
+imagens e possui uma variedade de aplicações, incluindo restauração de imagens, detecção de bordas e redução de ruído.</p>
+</div>
 <div class="sect2">
-<h3 id="_6_1_filtro_espacial">6.1 Filtro Espacial</h3>
+<h3 id="_6_1_laplaciano_do_gaussiano">6.1 Laplaciano do Gaussiano.</h3>
+<div class="paragraph">
+<p>O Laplaciano do Gaussiano (LoG) é um filtro espacial que combina as propriedades do filtro gaussiano e do operador
+laplaciano para detecção de bordas e características pontuais em uma imagem. A combinação do filtro gaussiano e do
+operador laplaciano no Laplaciano do Gaussiano permite que o filtro seja menos sensível ao ruído e mais eficaz na
+detecção de bordas do que o operador laplaciano aplicado diretamente à imagem original.</p>
+</div>
+<div class="paragraph">
+<p>O Laplaciano do Gaussiano é uma técnica amplamente utilizada no processamento de imagens, especialmente em aplicações
+que envolvem a detecção de bordas e características pontuais.</p>
+</div>
 <div class="sect3">
 <h4 id="_6_1_1_código_resultado">6.1.1 Código &amp; Resultado</h4>
+<div class="paragraph">
+<p>implemente um programa laplgauss.cpp. O programa deverá acrescentar mais uma funcionalidade ao exemplo fornecido,
+permitindo que seja calculado o laplaciano do gaussiano das imagens capturadas. Compare o resultado desse filtro
+com a simples aplicação do filtro laplaciano.</p>
+</div>
+<div class="listingblock">
+<div class="title">laplgauss</div>
+<div class="content">
+<pre class="highlight"><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
 
+using namespace std;
+using namespace cv;
+
+void printmask(Mat &amp;m) {
+	for (int i = 0; i &lt; m.size().height; i++) {
+		for (int j = 0; j &lt; m.size().width; j++) {
+			cout &lt;&lt; m.at&lt;float&gt;(i, j) &lt;&lt; ",";
+		}
+		cout &lt;&lt; "\n";
+	}
+}
+
+int main() {
+	float media[] = { 0.1111, 0.1111, 0.1111, 0.1111, 0.1111,
+				   0.1111, 0.1111, 0.1111, 0.1111 };
+	float gauss[] = { 0.0625, 0.125,  0.0625, 0.125, 0.25,
+					 0.125,  0.0625, 0.125,  0.0625 };
+	float horizontal[] = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+	float vertical[] = { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
+	float laplacian[] = { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
+	float boost[] = { 0, -1, 0, -1, 5.2, -1, 0, -1, 0 };
+	float laplacianOfGaussian[] = { 0,0,1,0,0,
+									0,1,2,1,0,
+									1,2,-16,2,1,
+									0,1,2,1,0,
+									0,0,1,0,0 };
+	char diretorio[1000], key;
+	Mat imagem, framegray, frame32f, frameFiltered,
+		mask(3, 3, CV_32F), result;
+	int absolut;
+
+	do {
+		cout &lt;&lt; "Digite a localizacao da imagem: " &lt;&lt; endl;
+		cout &lt;&lt; "EX.: C:\\User\\Desktop\\&lt;nomedaimagem&gt;.&lt;png ou jpeg&gt;" &lt;&lt; endl;
+		cin &gt;&gt; diretorio;
+
+		imagem = imread(diretorio);
+
+		if (!imagem.data) {
+			cout &lt;&lt; "Imagem nao encontrada!" &lt;&lt; endl;
+			cout &lt;&lt; "Verifique se a escrita esta correta." &lt;&lt; endl;
+		}
+	} while (!imagem.data);
+
+	cvtColor(imagem, framegray, COLOR_BGR2GRAY);
+	imshow("original", framegray);
+
+	framegray.convertTo(frame32f, CV_32F);
+
+	mask = Mat(3, 3, CV_32F, media);
+	absolut = 1;
+
+	for (;;) {
+		filter2D(frame32f, frameFiltered, frame32f.depth(), mask, Point(1, 1), 0);
+
+		if (absolut) {
+			Mat frameAbs;
+			absdiff(frameFiltered, Scalar(0), frameAbs);
+			frameFiltered = frameAbs;
+		}
+
+		frameFiltered.convertTo(result, CV_8U);
+		imshow("filtroespacial", result);
+
+		key = (char)waitKey(0);
+		if (key == 27) break;
+		switch (key) {
+		case 'a':
+			absolut = !absolut;
+			break;
+		case 'm':
+			mask = Mat(3, 3, CV_32F, media);
+			printmask(mask);
+			break;
+		case 'g':
+			mask = cv::Mat(3, 3, CV_32F, gauss);
+			printmask(mask);
+			break;
+		case 'l':
+			mask = cv::Mat(3, 3, CV_32F, laplacian);
+			printmask(mask);
+			imwrite("laplacian.png", result);
+			break;
+		case 'o':
+			mask = cv::Mat(5, 5, CV_32F, laplacianOfGaussian);
+			printmask(mask);
+			imwrite("laplacianofgaussian.png", result);
+			break;
+		default:
+			break;
+		}
+	}
+
+	return 0;
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1245,7 +1376,7 @@ int main(int argc, char** argv) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-30 00:18:42 -0300
+Last updated 2023-07-01 17:24:55 -0300
 </div>
 </div>
 </body>
