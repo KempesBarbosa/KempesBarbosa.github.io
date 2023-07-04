@@ -1068,9 +1068,124 @@ int main() {
 
 == 9. Detecção de bordas com o algoritmo de Canny
 
+O algoritmo de Canny é uma técnica clássica e amplamente utilizada para detecção de bordas em imagens. 
+Ele foi desenvolvido por John F. Canny em 1986 e é conhecido por sua precisão e robustez na detecção de bordas, 
+minimizando a resposta a ruídos e fornecendo bordas bem definidas.
+
+O algoritmo de Canny envolve os seguintes passos principais: redução do ruído, cálculo do gradiente, supressão não
+máxima, limiarização por histerese e rastreamento de bordas. O resultado final do algoritmo de Canny é uma imagem binária
+com as bordas claramente destacadas. O algoritmo oferece uma detecção precisa e robusta de bordas, com capacidade de
+lidar com ruídos e fornecer bordas bem definidas.
+
 === 9.1 Canny & Pontilhismo
 
+O algoritmo de Canny e o pontilhismo são conceitos distintos, mas é possível combinar essas técnicas para criar 
+um efeito artístico interessante.
+
+O algoritmo de Canny, como explicado anteriormente, é usado para a detecção de bordas em imagens. Ele identifica 
+as transições abruptas de intensidade na imagem e destaca essas áreas como bordas. O resultado é uma imagem binária 
+com bordas bem definidas. Por outro lado, o pontilhismo é uma técnica artística em que a imagem é criada a partir 
+de pequenos pontos ou pontos de cor. Esses pontos, quando vistos em conjunto, formam a imagem final. O pontilhismo 
+é inspirado na forma como o olho humano percebe a mistura de cores quando vários pontos são visualizados de certa 
+distância.
+
+A combinação do algoritmo de Canny e o pontilhismo pode ser alcançada aplicando-se a técnica do pontilhismo nas 
+bordas detectadas pelo algoritmo de Canny. Em vez de usar pontos uniformes para representar a imagem inteira, os 
+pontos são colocados apenas nas bordas encontradas. Essa abordagem pode resultar em uma representação artística da 
+imagem, onde as bordas são enfatizadas pelos pontos, enquanto outras áreas da imagem podem permanecer mais suaves 
+ou com um estilo diferente.
+
 ==== 9.1.1 Código & Resultado
+
+[source, cpp]
+.cannypoints.cpp
+
+----
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+using namespace cv;
+
+vector<int> showCenter(vector<int> x, int step) {
+
+    for (uint i = 0; i < x.size(); i++) {
+        x[i] = x[i] * step + step / 2;
+    }
+    return x;
+}
+
+void funcCircle(Mat image, Mat imageArt, Vec3b color, int r, int x, int y) {
+
+    color = image.at<Vec3b>(x, y);
+    circle(imageArt, Point(y, x), r, CV_RGB(color[2], color[1], color[0]), -1, LINE_AA);
+}
+
+int main() {
+    vector<int> cols, rows;
+    Mat imagem, fps, points, gray, ofusc, borders;
+    int x, y, fator = 60, passo = 5, jitter = 3, raio = 3;
+    Vec3b cor;
+    char diretorio[1000];
+
+    cout << "Digite o endereço da imagem: " << endl;
+    cin >> diretorio;
+
+    imagem = imread(diretorio);
+    Mat imagemArte(imagem.rows, imagem.cols, imagem.type());
+    srand(time(0));
+
+    if (!imagem.data) {
+        cout << "nao abriu" << endl;
+        exit(0);
+    }
+
+    rows.resize(imagem.rows / passo);
+    cols.resize(imagem.cols / passo);
+    iota(rows.begin(), rows.end(), 0);
+    iota(cols.begin(), cols.end(), 0);
+    rows = showCenter(rows, passo);
+    cols = showCenter(cols, passo);
+
+    random_shuffle(rows.begin(), rows.end());
+    for (auto i : rows) {
+
+        random_shuffle(cols.begin(), cols.end());
+        for (auto j : cols) {
+
+            x = i + rand() % (2 * jitter) - jitter + 1;
+            y = j + rand() % (2 * jitter) - jitter + 1;
+            funcCircle(imagem, imagemArte, cor, raio, x, y);
+        }
+    }
+    imwrite("points.jpg", imagemArte);
+
+    cvtColor(imagemArte, gray, COLOR_BGR2GRAY);
+    GaussianBlur(gray, ofusc, Size(5, 5), 25, 25);
+    Canny(ofusc, borders, fator, 3 * fator);
+    imwrite("canny.jpg", borders);
+
+    for (int i = 0; i < imagemArte.rows; i++) {
+        for (int j = 0; j < imagemArte.cols; j++) {
+            if (borders.at<uchar>(i, j) == 255) {
+                funcCircle(imagemArte, imagemArte, cor, 2, i, j);
+            }
+        }
+    }
+
+    imwrite("arte.jpg", imagemArte);
+    imshow("arte", imagemArte);
+    waitKey();
+    return 0;
+}
+----
 
 == 10. Quantização vetorial com k-means
 
