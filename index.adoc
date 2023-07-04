@@ -160,9 +160,9 @@ int main() {
 }
 ----
 
-image::https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/biel.png[biel,256,256,title="Biel original"]
+image::biel.png[biel,256,256,title="Biel original"]
 
-image::https://github.com/KempesBarbosa/KempesBarbosa.github.io/blob/main/imagem/janelaNegativo.png[janelaNegativo,256,256, title="Biel com filtro negativo"]
+image::janelaNegativo.png[janelaNegativo,256,256, title="Biel com filtro negativo"]
 
 === 1.2 Troca de regiões 
 
