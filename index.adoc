@@ -1097,6 +1097,9 @@ ou com um estilo diferente.
 
 ==== 9.1.1 Código & Resultado
 
+Implemente um programa cannypoints.cpp. A idéia é usar as bordas produzidas pelo algoritmo de Canny para melhorar a 
+qualidade da imagem pontilhista gerada. A forma como a informação de borda será usada é livre.
+
 [source, cpp]
 .cannypoints.cpp
 
@@ -1189,6 +1192,90 @@ int main() {
 
 == 10. Quantização vetorial com k-means
 
+A quantização vetorial com o algoritmo k-means é uma técnica usada para reduzir a quantidade de cores em uma imagem. 
+Ela agrupa os pixels da imagem em um número específico de clusters com base em sua similaridade de cor e, em seguida, 
+substitui os valores de cor dos pixels pelos valores médios dos clusters aos quais pertencem.
+
+O algoritmo k-means é um algoritmo de aprendizado não supervisionado que visa particionar um conjunto de dados em k 
+grupos distintos. No contexto da quantização vetorial de imagens, os pixels são tratados como pontos de dados no 
+espaço de cores e o objetivo é agrupá-los em k clusters representativos.
+
+A quantização vetorial com k-means é eficaz para reduzir o número de cores em uma imagem, o que pode ser útil para 
+economizar espaço de armazenamento ou simplificar a análise de imagens. No entanto, é importante lembrar que a redução 
+de cores pode resultar em perda de detalhes e qualidade visual, dependendo da aplicação e da quantidade de cores 
+escolhida. Portanto, é necessário encontrar um equilíbrio entre a redução de cores e a preservação da qualidade visual 
+desejada.
+
 === 10.1 K-means
 
+É importante mencionar que o resultado do k-means depende da escolha inicial dos centroides. Como o algoritmo pode 
+convergir para mínimos locais, diferentes inicializações podem resultar em diferentes soluções. Portanto, para obter 
+uma solução mais robusta, geralmente é necessário executar o algoritmo várias vezes com diferentes inicializações e 
+escolher a melhor solução com base em algum critério, como a soma das distâncias dos pontos aos centroides.
+
 ==== 10.1.1 Código & Resultado
+
+Implemente um programa exemplo onde a execução do código se dê usando o parâmetro nRodadas=1 e inciar os centros 
+de forma aleatória usando o parâmetro KMEANS_RANDOM_CENTERS ao invés de KMEANS_PP_CENTERS. Realize 10 rodadas 
+diferentes do algoritmo e compare as imagens produzidas.
+
+[source, cpp]
+.kmeansrandom.cpp 
+
+----
+	#include <opencv2/opencv.hpp>
+#include <cstdlib>
+#include <string>
+#include <iostream>
+
+using namespace std;
+using namespace cv;
+
+int main() {
+
+	int nCluster = 6, nRodadas = 1, cont = 1;
+	Mat rotulos, centros, imagem; 
+	char diretorio[1000];
+
+	cout << "Digite o endereço da imagem: " << endl;
+	cin >> diretorio;
+
+	imagem = imread(diretorio, IMREAD_COLOR);
+	Mat samples(imagem.rows * imagem.cols, 3, CV_32F);
+	
+	while (cont <= 10) {
+		for (int y = 0; y < imagem.rows; y++) {
+			for (int x = 0; x < imagem.cols; x++) {
+				for (int z = 0; z < 3; z++) {
+					samples.at<float>(y + x * imagem.rows, z) = imagem.at<Vec3b>(y, x)[z];
+				}
+			}
+		}
+
+		kmeans(samples,	nCluster, rotulos,
+			TermCriteria(TermCriteria::MAX_ITER | TermCriteria::EPS, 10000, 0.0001),
+			nRodadas, KMEANS_RANDOM_CENTERS,centros);
+
+		Mat rotulada(imagem.size(), imagem.type());
+		for (int y = 0; y < imagem.rows; y++) {
+			for (int x = 0; x < imagem.cols; x++) {
+				int indice = rotulos.at<int>(y + x * imagem.rows, 0);
+				rotulada.at<cv::Vec3b>(y, x)[0] = (uchar)centros.at<float>(indice, 0);
+				rotulada.at<cv::Vec3b>(y, x)[1] = (uchar)centros.at<float>(indice, 1);
+				rotulada.at<cv::Vec3b>(y, x)[2] = (uchar)centros.at<float>(indice, 2);
+			}
+		}
+
+		stringstream ss;
+		ss << "saida" << cont << ".jpg";
+		string s = ss.str();
+		cont++;
+		imshow("clustered image", rotulada);
+		imwrite(s, rotulada);
+		waitKey(1);
+		
+	}
+
+	return 0;
+}
+----
