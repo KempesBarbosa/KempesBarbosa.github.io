@@ -1,6 +1,7 @@
 = Processamento Digital de Imagens
 Gabriel Souto Lozano Barbosa - gabriel.barbosa.082@ufrn.edu.br
 :toc: left
+:allow-uri-read:
 :imagesdir: https://github.com/KempesBarbosa/KempesBarbosa.github.io/tree/main/imagem
 
 == 1. Manipulando pixels em uma imagem.
@@ -1223,7 +1224,7 @@ diferentes do algoritmo e compare as imagens produzidas.
 .kmeansrandom.cpp 
 
 ----
-	#include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <cstdlib>
 #include <string>
 #include <iostream>
