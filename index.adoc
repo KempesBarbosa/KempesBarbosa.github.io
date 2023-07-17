@@ -4,6 +4,12 @@ Gabriel Souto Lozano Barbosa - gabriel.barbosa.082@ufrn.edu.br
 :allow-uri-read:
 :imagesdir: ./imagem
 
+== 0. Observações. 
+
+As imagens utilizadas foram disponibilizadas pelo Prof. Agostinho Brito, no site https://agostinhobritojr.github.io/tutorial/pdi/#_exerc%C3%ADcios_11 .
+Todos os código fornecidos nesse site foram formatados para rodar em OpenCV instalado para funcionar no sistema Windows, seguindo o tutorial fornecido 
+neste vídeo https://www.youtube.com/watch?v=lcOpfDMv1YI&t=473s&ab_channel=PietroMartinsDeOliveira .
+
 == 1. Manipulando pixels em uma imagem.
 
 A manipulação de pixels em uma imagem refere-se ao processo de alterar as propriedades dos pixels 
