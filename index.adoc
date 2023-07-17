@@ -1087,6 +1087,9 @@ int main() {
 }
 ----
 
+image::biel.png[biel,256,256,title="Biel original"]
+image::homomorphic_filter.png[title="Biel com o filtro aplicado"]
+
 == 9. Detecção de bordas com o algoritmo de Canny
 
 O algoritmo de Canny é uma técnica clássica e amplamente utilizada para detecção de bordas em imagens. 
