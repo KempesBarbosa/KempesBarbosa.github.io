@@ -765,6 +765,11 @@ int main() {
 }
 ----
 
+image::biel.png[biel,256,256,title="Biel original"]
+image::filtroespacial.png[title="Biel com filtro espacial"]
+image::laplacian.png[title="Biel com filtro laplaciano"]
+image::laplacianofgaussian.png[title="Biel com filtro laplciano do gaussiano"]
+
 === 6.2 TiltShift 
 
 O efeito Tilt-Shift é uma técnica popular de pós-processamento de imagens que cria a ilusão de 
