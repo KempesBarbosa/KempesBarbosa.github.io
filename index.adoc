@@ -1213,6 +1213,12 @@ int main() {
 }
 ----
 
+image::biel.png[biel,256,256,title="Biel original"]
+image::points.jpg[title="Biel com points"]
+image::pontos.jpg[title="Biel com points 2"]
+image::canny.jpg[title="Biel com filtro canny"]
+image::arte.jpg[title="Resultado final do código"]
+
 == 10. Quantização vetorial com k-means
 
 A quantização vetorial com o algoritmo k-means é uma técnica usada para reduzir a quantidade de cores em uma imagem. 
