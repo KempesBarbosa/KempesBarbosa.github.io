@@ -2,7 +2,7 @@
 Gabriel Souto Lozano Barbosa - gabriel.barbosa.082@ufrn.edu.br
 :toc: left
 :allow-uri-read:
-:imagesdir: https://github.com/KempesBarbosa/KempesBarbosa.github.io/tree/main/imagem/
+:imagesdir: ./imagem
 
 == 1. Manipulando pixels em uma imagem.
 
@@ -179,7 +179,6 @@ Implemente um programa trocaregioes.cpp. Seu programa deverá trocar os quadrant
 
 [source,cpp]
 .trocaderegioes.cpp
-
 ----
 // Código realizado para rodar em WINDOWS sem makeFile, atente-se as intruções! 
 #include <iostream>
@@ -270,7 +269,6 @@ desenhada na horizontal. Grave a imagem no formato PNG e no formato YML. Compare
 
 [source,cpp]
 .filestorage.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -447,7 +445,6 @@ presumir, a priori, que elas tenham buracos ou não.
 
 [source,cpp]
 .labeling.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -579,7 +576,6 @@ observando o efeito gerado. Assuma que as imagens processadas serão em tons de 
 
 [source,cpp]
 .equalize.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -650,7 +646,6 @@ com a simples aplicação do filtro laplaciano.
 
 [source, cpp]
 .laplgauss.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -766,7 +761,6 @@ que permite controlar a área de foco seletivamente e criar uma profundidade de 
 
 [source, cpp]
 .tiltshift.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -913,7 +907,6 @@ a imagem fornecida é em tons de cinza.
 
 [source, cpp]
 .homomorfico.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -1103,7 +1096,6 @@ qualidade da imagem pontilhista gerada. A forma como a informação de borda ser
 
 [source, cpp]
 .cannypoints.cpp
-
 ----
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -1222,7 +1214,6 @@ diferentes do algoritmo e compare as imagens produzidas.
 
 [source, cpp]
 .kmeansrandom.cpp 
-
 ----
 #include <opencv2/opencv.hpp>
 #include <cstdlib>
