@@ -885,6 +885,10 @@ int main() {
 }
 ----
 
+image::biel.png[biel,256,256,title="Biel original"]
+image::imagemEditada.png[title="Imagem sem aplicação do filtro"]
+image::imagemEditadaA.png[titel="Imagem com filtro"]
+
 == 7. A Tranformada Discreta de Fourier
 
 === 7.1 
