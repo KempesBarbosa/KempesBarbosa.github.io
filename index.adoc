@@ -416,6 +416,9 @@ int main() {
 }
 ----
 
+image::desafio.png[title="Imagem codificada"]
+image::imagemEscondida.png[title="Imagem escondida"]
+
 == 4. Preenchendo regiões
 
 O preenchimento de regiões em processamento digital de imagens refere-se a técnicas utilizadas para 
