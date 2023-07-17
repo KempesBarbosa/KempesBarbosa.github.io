@@ -328,6 +328,8 @@ int main(int argc, char** argv) {
 }
 ----
 
+image::senoide-256.png[title="Senoide"]
+
 == 3. Decomposição de imagens em planos de bits
 
 A decomposição de imagens em planos de bits é um processo no qual uma imagem digital é dividida em 
