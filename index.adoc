@@ -1307,3 +1307,6 @@ int main() {
 	return 0;
 }
 ----
+
+image::biel.png[biel,256,256,title="Biel original"]
+image::gif.gif[title="Resultado pós código"]
