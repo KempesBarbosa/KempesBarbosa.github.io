@@ -555,7 +555,7 @@ int main() {
 
 ----
 
-image::Bolhas.png[title="Bolhas"]
+image::bolhas.png[title="Bolhas"]
 image::JanelaSBolhas.png[title="Removendo bolhas das bordas"]
 image::labeling.png[title="Labeling aplicado"]
 image::resultadoBolhas.png[title="Resultado pós processamento"]
