@@ -630,6 +630,10 @@ int main(int argc, char** argv) {
 }
 ----
 
+image::biel.jpg[title="Biel original"]
+image::ImagememEscaladeCinza.png[title="Biel em escala de cinza"]
+image::ImagemEqualizada.png[title="Biel equalizado"]
+
 == 6. Filtragem no domínio espacial I.
 
 A filtragem no domínio espacial refere-se à aplicação de um filtro direto aos pixels de uma 
