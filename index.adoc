@@ -242,6 +242,10 @@ int main() {
 }
 ----
 
+image::biel.png[biel,256,256,title="Biel original"]
+
+image::janelaTrocado.png[janelaTrocado,256,256, title="Biel com quadrantes trocados"]
+
 == 2. Serialização via FileStore
 
 A serialização refere-se ao processo de converter dados em uma representação que possa ser armazenada ou transmitida, 
